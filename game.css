@@ -1,0 +1,21 @@
+body {
+	border: solid 2px;
+	width: auto;
+	text-align: center;
+	padding: 5px 0 5px 0;
+	flex-wrap: wrap;
+}
+
+.control{
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+canvas {
+	border: 1px solid;
+}
+
+button {
+	text-align: center;
+	width: 5em;
+}

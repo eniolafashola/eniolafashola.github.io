@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Game</title>
+	<link rel="stylesheet" type="text/css" href="game.css">
+</head>
+<body onload="startGame()">
+	<div id='control'>
+		<div>
+		<button onmousedown="moveUp()" onmouseup="clearMove()" ontouchstart="moveUp()" >UP</button><br>
+		<button onmousedown="moveLeft()" onmouseup="clearMove()" ontouchstart="moveLeft()">Left</button>
+		<button onmousedown="moveRight()" onmouseup="clearMove()" ontouchstart="moveRight()">Right</button><br>
+		<button onmousedown="moveDown()" onmouseup="clearMove()" ontouchstart="moveDown()">Down</button>
+		</div>
+		<div>
+			<button onclick=" ">Start</button>
+		</div>
+	</div>
+ <script src="gamePiece.js"></script>
+</body>
+</html>
