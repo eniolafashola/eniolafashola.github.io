@@ -1,10 +1,12 @@
 var gamePiece;
 var gameObstacle = [];
 var gameScore;
+var gameOver;
 
 function startGame() {
 	gamePiece = new component(30, 30, "red", 10, 120);
 	gameScore = new component("30px", "Consolas", "black", 280, 40, "text");
+	gameOver = new component("80px", "Consolas", "red", 45, 170, "text");
 	gameField.start();
 }
 
@@ -28,6 +30,10 @@ var gameField = {
 		stop : function() {
 			clearInterval(this.interval);
 	}
+}
+
+function restart() {
+	gameField.start();
 }
 
 function component(width, height, color, x, y, type) {
@@ -64,11 +70,17 @@ function component(width, height, color, x, y, type) {
 		var otherTop = otherobj.y;
 		var otherBottom = otherobj.y + (otherobj.height);
 		var crash = true;
+
 		if ((myBottom < otherTop) ||
 		 (myTop > otherBottom) ||
 		 (myRight < otherLeft) ||
 	     (myLeft > otherRight)) {
 			crash = false;
+		}
+		else if (crash == !false) {
+			gameOver.text = "Game Over";
+	  		gameOver.update();
+			document.getElementById("cntl").innerHTML = "<span class='restart'>Restart</span>";
 		}
 		return crash;
 	}

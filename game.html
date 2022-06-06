@@ -7,17 +7,15 @@
 	<link rel="stylesheet" type="text/css" href="game.css">
 </head>
 <body onload="startGame()">
-	<div class="container">
-		<div class="space"></div>
-		<div class="control">
-			<button onmousedown="moveUp()" onmouseup="clearMove()" ontouchstart="moveUp()" >UP</button><br>
-			<button onmousedown="moveLeft()" onmouseup="clearMove()" ontouchstart="moveLeft()">Left</button>
-			<button onmousedown="moveRight()" onmouseup="clearMove()" ontouchstart="moveRight()">Right</button><br>
-			<button onmousedown="moveDown()" onmouseup="clearMove()" ontouchstart="moveDown()">Down</button>
-		</div>
-		<div class="S">
-			<button>Start</button>
-		</div>
+	<div class="cntl" id="cntl">
+<!-- 		<button onmousedown="moveUp()" onmouseup="clearMove()" ontouchstart="moveUp()" >^</button><br>
+		<button onmousedown="moveLeft()" onmouseup="clearMove()" ontouchstart="moveLeft()"><</button>
+		<button onmousedown="moveRight()" onmouseup="clearMove()" ontouchstart="moveRight()">></button><br>
+		<button onmousedown="moveDown()" onmouseup="clearMove()" ontouchstart="moveDown()">v</button> -->
+		<div class="up" onmousedown="moveUp()" onmouseup="clearMove()" ontouchstart="moveUp()" >^</div><br>
+		<div class="left" onmousedown="moveLeft()" onmouseup="clearMove()" ontouchstart="moveLeft()"><</div>
+		<div class="right" onmousedown="moveRight()" onmouseup="clearMove()" ontouchstart="moveRight()">></div><br>
+		<div class="down" onmousedown="moveDown()" onmouseup="clearMove()" ontouchstart="moveDown()">v</div>				
 	</div>
  <script src="gamePiece.js"></script>
 </body>
