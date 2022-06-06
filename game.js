@@ -32,10 +32,6 @@ var gameField = {
 	}
 }
 
-function restart() {
-	gameField.start();
-}
-
 function component(width, height, color, x, y, type) {
 	this.type = type;
 	this.width = width;
@@ -80,7 +76,10 @@ function component(width, height, color, x, y, type) {
 		else if (crash == !false) {
 			gameOver.text = "Game Over";
 	  		gameOver.update();
-			document.getElementById("cntl").innerHTML = "<span class='restart'>Restart</span>";
+	  		var cntl = document.getElementById("cntl");
+	  		cntl.innerHTML = "<span class='restart'>Restart</span>";
+	  		cntl.style.border = "none";
+	  		cntl.addEventListener("click", restart );
 		}
 		return crash;
 	}
@@ -147,4 +146,8 @@ function moveRight() {
 function clearMove() {
 	gamePiece.speedX = 0;
 	gamePiece.speedY = 0;
+}
+
+function restart() {
+	document.location.reload(true);
 }
