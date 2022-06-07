@@ -6,13 +6,13 @@
 	<title>Game</title>
 	<link rel="stylesheet" type="text/css" href="game.css">
 </head>
-<body onload="startGame()">
+<body onload="index()">
 	<div class="interact">
-		<div id="cntl">
+		<div id="cntl" class="cntl">
 			<div class="up" onmousedown="moveUp()" onmouseup="clearMove()" ontouchstart="moveUp()" >^</div><br>
 			<div class="left" onmousedown="moveLeft()" onmouseup="clearMove()" ontouchstart="moveLeft()"><</div>
 			<div class="right" onmousedown="moveRight()" onmouseup="clearMove()" ontouchstart="moveRight()">></div><br>
-			<div class="down" onmousedown="moveDown()" onmouseup="clearMove()" ontouchstart="moveDown()">v</div>				
+			<div class="down" onmousedown="moveDown()" onmouseup="clearMove()" ontouchstart="moveDown()">~</div>				
 		</div>
 	</div>
  <script src="game.js"></script>

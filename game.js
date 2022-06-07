@@ -2,12 +2,25 @@ var gamePiece;
 var gameObstacle = [];
 var gameScore;
 var gameOver;
+var hor = 10;
+var ver = 120;
 
 function startGame() {
-	gamePiece = new component(30, 30, "red", 10, 120);
+	gamePiece = new component(30, 30, "red", hor, ver);
 	gameScore = new component("30px", "Consolas", "black", 280, 40, "text");
 	gameOver = new component("80px", "Consolas", "red", 45, 170, "text");
 	gameField.start();
+}
+
+function index() {
+	const control = document.getElementById("cntl").innerHTML;
+	var index = document.getElementById("cntl");
+	index.innerHTML = "<span class='restart'>Play Game</span>";
+	index.style.alignItems = "center";
+	index.addEventListener("click",  function() {
+		startGame();
+		index.innerHTML = control;
+	}, {once : true});
 }
 
 var gameField = {
@@ -78,8 +91,10 @@ function component(width, height, color, x, y, type) {
 	  		gameOver.update();
 	  		var cntl = document.getElementById("cntl");
 	  		cntl.innerHTML = "<span class='restart'>Restart</span>";
-	  		cntl.style.border = "none";
-	  		cntl.addEventListener("click", restart );
+	  		cntl.style.justifyContent = "center";
+	  		cntl.addEventListener("click", function() {
+				index();
+			}, {once : true});
 		}
 		return crash;
 	}
@@ -146,8 +161,4 @@ function moveRight() {
 function clearMove() {
 	gamePiece.speedX = 0;
 	gamePiece.speedY = 0;
-}
-
-function restart() {
-	document.location.reload(true);
 }

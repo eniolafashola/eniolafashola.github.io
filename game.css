@@ -55,6 +55,6 @@ canvas {
 	display: grid;
 	grid-template-areas: 
 		"... up ..."
-		"left restart right"
+		"left ... right"
 		"... down ...";
 }
