@@ -13,13 +13,21 @@ function startGame() {
 }
 
 function index() {
+	var screenC =	document.createElement("IMG");
+	screenC.setAttribute("src", "img.png");
+	screenC.setAttribute("width", "100%");
+	screenC.setAttribute("height", "100%");
+	screenC.setAttribute("alt", "intro");
+	document.getElementById("canvas").appendChild(screenC);
 	const control = document.getElementById("cntl").innerHTML;
 	var index = document.getElementById("cntl");
 	index.innerHTML = "<span class='restart'>Play Game</span>";
-	index.style.alignItems = "center";
+
 	index.addEventListener("click",  function() {
 		startGame();
+		document.getElementById("canvas").removeChild(screenC);
 		index.innerHTML = control;
+		index.style.alignItems = "center";
 	}, {once : true});
 }
 
@@ -32,7 +40,7 @@ var gameField = {
 		this.context =
 		this.canvas.getContext("2d");
 
-		document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+		document.getElementById("canvas").appendChild(this.canvas, document.body.childNodes[0]);
 		this.frameNo = 0;
 		this.interval =
 		setInterval(updateField, 20);
@@ -87,14 +95,21 @@ function component(width, height, color, x, y, type) {
 			crash = false;
 		}
 		else if (crash == !false) {
-			gameOver.text = "Game Over";
-	  		gameOver.update();
-	  		var cntl = document.getElementById("cntl");
-	  		cntl.innerHTML = "<span class='restart'>Restart</span>";
-	  		cntl.style.justifyContent = "center";
-	  		cntl.addEventListener("click", function() {
-				index();
+			const control = document.getElementById("cntl").innerHTML;
+			var index = document.getElementById("cntl");
+			index.innerHTML = "<span class='restart'>Restart</span>";
+
+			index.addEventListener("click",  function() {
+				startGame();
+				index.innerHTML = control;
+				index.style.alignItems = "center";
 			}, {once : true});
+			// var restart = document.getElementById("cntl");
+			// gameOver.text = "Game Over";
+	  // 		gameOver.update();
+	  // 		// document.location.reload();
+	  // 		index();
+			// restart.innerHTML = "<span class='restart'>Restart</span>";
 		}
 		return crash;
 	}
