@@ -19,15 +19,18 @@ function index() {
 	screenC.setAttribute("height", "100%");
 	screenC.setAttribute("alt", "intro");
 	document.getElementById("canvas").appendChild(screenC);
-	const control = document.getElementById("cntl").innerHTML;
-	var index = document.getElementById("cntl");
-	index.innerHTML = "<span class='restart'>Play Game</span>";
 
-	index.addEventListener("click",  function() {
+	var interact = document.getElementById("interact");
+	var btn = document.createElement("button");
+	var cntl = document.getElementById("cntl");
+	btn.innerHTML = "<span class='restart'>Play Game</span>";
+	interact.replaceChild(btn, interact.children[0]);
+
+
+	btn.addEventListener("click",  function() {
 		startGame();
 		document.getElementById("canvas").removeChild(screenC);
-		index.innerHTML = control;
-		index.style.alignItems = "center";
+		interact.replaceChild(cntl, interact.children[0]);
 	}, {once : true});
 }
 
