@@ -1,6 +1,8 @@
 var gamePiece;
 var gameObstacle = [];
 var gameScore;
+var highScore = 50;
+var userName = null;
 var hor = 10;
 var ver = 120;
 
@@ -102,12 +104,27 @@ function component(width, height, color, x, y, type) {
 		else if (crash == !false) {
 			var gameOver =	document.createElement("h1");
 			gameOver.innerHTML = "<span class = 'gameover'>Game Over</span";
-			var score = document.createElement("p");
-			score.innerHTML = "score: " + gameField.frameNo;
+			var score = document.createElement("h2");
+			var yourScore = gameField.frameNo;
+			score.innerHTML = "Score: " + yourScore;
+			var global = document.createElement("p");
+
+			if (yourScore > highScore) {
+				highScore = yourScore;
+				userName = prompt("Enter Username");
+			}
+
+			global.innerHTML =
+			 "Global Highscore: " + userName + ", " + yourScore;
+
 			var screen = document.getElementById("screen");
 			var canvas = document.getElementById("canvas");
 			screen.replaceChild(gameOver, screen.children[0]);
 			screen.appendChild(score);
+
+			if (gameField.frameNo < 1000) {
+				screen.appendChild(global);
+			}
 
 			var interact = document.getElementById("interact");
 			var btn = document.createElement("button");
