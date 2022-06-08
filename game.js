@@ -54,6 +54,10 @@ var gameField = {
 	}
 }
 
+function restart(argument) {
+	// body...
+}
+
 function component(width, height, color, x, y, type) {
 	this.type = type;
 	this.width = width;
@@ -99,6 +103,7 @@ function component(width, height, color, x, y, type) {
 			var gameOver =	document.createElement("h1");
 			gameOver.innerHTML = "<span class = 'gameover'>Game Over</span";
 			var screen = document.getElementById("screen");
+			var canvas = document.getElementById("canvas");
 			screen.replaceChild(gameOver, screen.children[0]);
 
 			var interact = document.getElementById("interact");
@@ -109,8 +114,7 @@ function component(width, height, color, x, y, type) {
 
 
 			btn.addEventListener("click",  function() {
-				startGame();
-				document.getElementById("canvas").removeChild(screenC);
+				screen.replaceChild(canvas, screen.children[0]);
 				interact.replaceChild(cntl, interact.children[0]);
 			}, {once : true});
 		}
