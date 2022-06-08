@@ -100,12 +100,14 @@ function component(width, height, color, x, y, type) {
 			crash = false;
 		}
 		else if (crash == !false) {
-			var body = document.getElementById("body");
 			var gameOver =	document.createElement("h1");
 			gameOver.innerHTML = "<span class = 'gameover'>Game Over</span";
+			var score = document.createElement("p");
+			score.innerHTML = "score: " + gameField.frameNo;
 			var screen = document.getElementById("screen");
 			var canvas = document.getElementById("canvas");
 			screen.replaceChild(gameOver, screen.children[0]);
+			screen.appendChild(score);
 
 			var interact = document.getElementById("interact");
 			var btn = document.createElement("button");
