@@ -24,6 +24,10 @@ function index() {
 	btn.innerHTML = "<span class='restart'>Play Game</span>";
 	interact.replaceChild(btn, interact.children[0]);
 
+	if (document.location.reload == true) {
+		btn.innerHTML = "<span class='restart'>Restart</span>";
+	}
+
 
 	btn.addEventListener("click",  function() {
 		startGame();
@@ -52,10 +56,6 @@ var gameField = {
 		stop : function() {
 			clearInterval(this.interval);
 	}
-}
-
-function restart(argument) {
-	// body...
 }
 
 function component(width, height, color, x, y, type) {
@@ -100,6 +100,7 @@ function component(width, height, color, x, y, type) {
 			crash = false;
 		}
 		else if (crash == !false) {
+			var body = document.getElementById("body");
 			var gameOver =	document.createElement("h1");
 			gameOver.innerHTML = "<span class = 'gameover'>Game Over</span";
 			var screen = document.getElementById("screen");
@@ -114,8 +115,7 @@ function component(width, height, color, x, y, type) {
 
 
 			btn.addEventListener("click",  function() {
-				screen.replaceChild(canvas, screen.children[0]);
-				interact.replaceChild(cntl, interact.children[0]);
+			document.location.reload();
 			}, {once : true});
 		}
 		return crash;
