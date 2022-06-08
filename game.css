@@ -13,11 +13,19 @@ body {
 }
 
 #screen {
-	height: 50%;
+	height: 48%;
 	width: 100%;
 	padding: 0 0 0 0;
 	display: flex;
 	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+#title {
+	width: 100%;
+	height: 4%;
+	display: flex;
 	align-items: center;
 	justify-content: center;
 }
@@ -35,9 +43,14 @@ canvas {
 	margin: 0;
 }
 
+.gameover {
+	font-size: 50px;
+	color: red;
+}
+
 #interact {
 	width: 100%;
-	height: 50%;
+	height: 48%;
 	display: flex;
 	justify-content: center;
 	align-items: center;

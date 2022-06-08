@@ -1,14 +1,12 @@
 var gamePiece;
 var gameObstacle = [];
 var gameScore;
-var gameOver;
 var hor = 10;
 var ver = 120;
 
 function startGame() {
 	gamePiece = new component(30, 30, "red", hor, ver);
 	gameScore = new component("30px", "Consolas", "black", 280, 40, "text");
-	gameOver = new component("80px", "Consolas", "red", 45, 170, "text");
 	gameField.start();
 }
 
@@ -98,21 +96,23 @@ function component(width, height, color, x, y, type) {
 			crash = false;
 		}
 		else if (crash == !false) {
-			const control = document.getElementById("cntl").innerHTML;
-			var index = document.getElementById("cntl");
-			index.innerHTML = "<span class='restart'>Restart</span>";
+			var gameOver =	document.createElement("h1");
+			gameOver.innerHTML = "<span class = 'gameover'>Game Over</span";
+			var screen = document.getElementById("screen");
+			screen.replaceChild(gameOver, screen.children[0]);
 
-			index.addEventListener("click",  function() {
+			var interact = document.getElementById("interact");
+			var btn = document.createElement("button");
+			var cntl = document.getElementById("cntl");
+			btn.innerHTML = "<span class='restart'>Restart</span>";
+			interact.replaceChild(btn, interact.children[0]);
+
+
+			btn.addEventListener("click",  function() {
 				startGame();
-				index.innerHTML = control;
-				index.style.alignItems = "center";
+				document.getElementById("canvas").removeChild(screenC);
+				interact.replaceChild(cntl, interact.children[0]);
 			}, {once : true});
-			// var restart = document.getElementById("cntl");
-			// gameOver.text = "Game Over";
-	  // 		gameOver.update();
-	  // 		// document.location.reload();
-	  // 		index();
-			// restart.innerHTML = "<span class='restart'>Restart</span>";
 		}
 		return crash;
 	}
