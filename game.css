@@ -77,11 +77,14 @@ canvas {
 	grid-area: down;
 }
 
-.restart {
+button {
 	font-weight: bold;
 	font-size: 2em;
-	color: blue;
-	text-shadow: 2px;
+	padding: 8px;
+	box-shadow: 3px 3px 8px #1540be;
+	background-color: #0e72e4b8;
+	border-color: #a4a4e6;
+	color: #eddfdf;
 }
 
 #cntl {

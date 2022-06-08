@@ -21,7 +21,7 @@ function index() {
 	var interact = document.getElementById("interact");
 	var btn = document.createElement("button");
 	var cntl = document.getElementById("cntl");
-	btn.innerHTML = "<span class='restart'>Play Game</span>";
+	btn.innerHTML = "Play Game";
 	interact.replaceChild(btn, interact.children[0]);
 
 	if (document.location.reload == true) {
@@ -110,7 +110,7 @@ function component(width, height, color, x, y, type) {
 			var interact = document.getElementById("interact");
 			var btn = document.createElement("button");
 			var cntl = document.getElementById("cntl");
-			btn.innerHTML = "<span class='restart'>Restart</span>";
+			btn.innerHTML = "Restart";
 			interact.replaceChild(btn, interact.children[0]);
 
 
