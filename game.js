@@ -1,8 +1,9 @@
 var gamePiece;
 var gameObstacle = [];
 var gameScore;
-var highScore = 50;
+var highScore = 10000;
 var userName = null;
+var inTime = 21;
 var hor = 10;
 var ver = 120;
 
@@ -49,8 +50,24 @@ var gameField = {
 
 		document.getElementById("canvas").appendChild(this.canvas, document.body.childNodes[0]);
 		this.frameNo = 0;
+
+		function updateInterval() {
+			inTime -= 5;
+			clearInterval();
+		}
+
+		setInterval(updateInterval, 1000);
+
 		this.interval =
-		setInterval(updateField, 20);
+		  setInterval(updateField, inTime);
+
+		console.log(this.interval);
+
+
+		
+
+		
+
 	},
 	clear : function() {
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -112,11 +129,11 @@ function component(width, height, color, x, y, type) {
 			if (yourScore > highScore) {
 				highScore = yourScore;
 				userName = prompt("Enter Username");
+				console.log(userName);
 			}
 
 			global.innerHTML =
 			 "Global Highscore: " + userName + ", " + yourScore;
-
 			var screen = document.getElementById("screen");
 			var canvas = document.getElementById("canvas");
 			screen.replaceChild(gameOver, screen.children[0]);
