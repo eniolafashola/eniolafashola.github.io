@@ -78,6 +78,15 @@ p {
 	grid-area: left;
 }
 
+.center {
+	grid-area: center;
+	border: 2px solid black;
+	box-shadow: 1px 1px 10px;
+	width: 1.8em;
+	height: 1.8em;
+	border-radius: 1.8em;
+}
+
 .right {
 	grid-area:right;
 }
@@ -108,7 +117,7 @@ button {
 	display: grid;
 	grid-template-areas: 
 		"... up ..."
-		"left ... right"
+		"left center right"
 		"... down ...";
 	align-items: center;
 	justify-items: center;

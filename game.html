@@ -15,10 +15,11 @@
 	</div>
 	<div id="interact">
 		<div id="cntl">
-			<div class="up" onmousedown="moveUp()" onmouseup="clearMove()" ontouchstart="moveUp()" >^</div><br>
-			<div class="left" onmousedown="moveLeft()" onmouseup="clearMove()" ontouchstart="moveLeft()"><</div>
-			<div class="right" onmousedown="moveRight()" onmouseup="clearMove()" ontouchstart="moveRight()">></div><br>
-			<div class="down" onmousedown="moveDown()" onmouseup="clearMove()" ontouchstart="moveDown()">~</div>				
+			<div class="up" onmousedown="moveUp()" onmouseup="clearMove()" ontouchstart="moveUp()" ontouchend="clearMove()">^</div><br>
+			<div class="left" onmousedown="moveLeft()" onmouseup="clearMove()" ontouchstart="moveLeft()" ontouchend="clearMove()"><</div>
+			<div class="center" onmousedown="speedUp()" onmouseup="clearMove()" ontouchstart="speedUp()" ontouchend="clearMove()"></div>
+			<div class="right" onmousedown="moveRight()" onmouseup="clearMove()" ontouchstart="moveRight()" ontouchend="clearMove()">></div><br>
+			<div class="down" onmousedown="moveDown()" onmouseup="clearMove()" ontouchstart="moveDown()" ontouchend="clearMove()">~</div>				
 		</div>
 	</div>
  <script src="game.js"></script>

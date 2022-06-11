@@ -4,11 +4,9 @@ var gameScore;
 var highScore = 10000;
 var userName = null;
 var inTime = 20;
-var hor = 10;
-var ver = 120;
 
 function startGame() {
-	gamePiece = new component(30, 30, "red", hor, ver);
+	gamePiece = new component(30, 30, "red", 10, 120);
 	gameScore = new component("30px", "Consolas", "black", 280, 40, "text");
 	gameField.start();
 }
@@ -207,7 +205,13 @@ function moveRight() {
 	gamePiece.speedX = 1;
 }
 
+function speedUp() {
+	clearInterval(this.interval);
+	this.interval = setInterval(updateField, 1);
+}
+
 function clearMove() {
 	gamePiece.speedX = 0;
 	gamePiece.speedY = 0;
+	clearInterval(this.interval);
 }
