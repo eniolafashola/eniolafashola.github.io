@@ -6,20 +6,20 @@
 	<title>Game</title>
 	<link rel="stylesheet" type="text/css" href="game.css">
 </head>
-<body id="body" onmousedown="return false" onselectstart="return false" onload="index()">
+<body id="body"  onmousedown="return false" onselectstart="return false" onload="index()">
 	<div id="screen">
 		<div id="canvas"></div>
 	</div>
 	<div id="title">
-		<h2>Xi</h2>
+		<h2>1965</h2>
 	</div>
 	<div id="interact">
 		<div id="cntl">
-			<div class="up" onmousedown="moveUp()" onmouseup="clearMove()" ontouchstart="moveUp()" ontouchend="clearMove()">^</div><br>
-			<div class="left" onmousedown="moveLeft()" onmouseup="clearMove()" ontouchstart="moveLeft()" ontouchend="clearMove()"><</div>
-			<div class="center" onmousedown="speedUp()" onmouseup="clearMove()" ontouchstart="speedUp()" ontouchend="clearMove()"></div>
-			<div class="right" onmousedown="moveRight()" onmouseup="clearMove()" ontouchstart="moveRight()" ontouchend="clearMove()">></div><br>
-			<div class="down" onmousedown="moveDown()" onmouseup="clearMove()" ontouchstart="moveDown()" ontouchend="clearMove()">~</div>				
+			<div class="up button" onmousedown="moveUp()" onmouseup="clearMove()" ontouchstart="moveUp()" ontouchend="clearMove()">^</div><br>
+			<div class="left button" onmousedown="moveLeft()" onmouseup="clearMove()" ontouchstart="moveLeft()" ontouchend="clearMove()"><</div>
+			<div id="center" class="center button" onclick="select()" onmousedown="speedUp()" onmouseup="clearMove()" ontouchstart="speedUp()" ontouchend="clearMove()"></div>
+			<div class="right button" onmousedown="moveRight()" onmouseup="clearMove()" ontouchstart="moveRight()" ontouchend="clearMove()">></div><br>
+			<div class="down button" onmousedown="moveDown()" onmouseup="clearMove()" ontouchstart="moveDown()" ontouchend="clearMove()">~</div>				
 		</div>
 	</div>
  <script src="game.js"></script>
