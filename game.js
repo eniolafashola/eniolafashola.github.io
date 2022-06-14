@@ -207,7 +207,12 @@ function moveRight() {
 	gamePiece.speedX = 1;
 }
 
+speedUp = () => {
+	this.interval = setInterval(updateField, 0);
+}
+
 function clearMove() {
 	gamePiece.speedX = 0;
 	gamePiece.speedY = 0;
+	clearInterval(this.interval);
 }
