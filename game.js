@@ -2,44 +2,50 @@ var gamePiece;
 var gameObstacle = [];
 var gameScore;
 var gameOver;
+var loading;
+var play;
+var exit;
 
 startGame = function() {
 	gamePiece = new component(30, 25, "red", 10, 120);
 	gameScore = new component("30px", "Consolas", "black", 280, 40, "text");
+	loading = new component(500, 270, "back3.jpg", 0, 0, "loading");
    gameOver = new component("50px", "Consolas", "red", 115, 120, "text");
-	gameField.start();
+  play = new component("35px", "Cursive", "white", 133, 112, "text");
+  exit = new component("35px", "Cursive", "white", 175, 160, "text");
+   gameField.loadIndex();
 }
 
 startControl = function() {
 	moveUp = function() {
-	gamePiece.speedY = -1;
+	gamePiece.speedY = -1.2;
       };
 
-moveDown = function() {
-	gamePiece.speedY = 1;
- };
+    moveDown = function() {
+	gamePiece.speedY = 1.2;
+     };
 
- moveLeft = function() {
+    moveLeft = function() {
 	gamePiece.speedX = -1;
-};
+    };
 
- moveRight = function() {
-	gamePiece.speedX = 1; 
-};
+    moveRight = function() {
+	gamePiece.speedX = 1;
+    };
 
- speedUp = function() {
- 	this.runInterval =
-	      setInterval(run, 50);
-	this.interval =
-		  setInterval(updateField, 0);
-};
+   speedUp = function() {
+  	this.runInterval =
+	       setInterval(run, 50);
+	  this.interval =
+		   setInterval(updateField, 0);
+   };
 
-clearMove = function() {
-	gamePiece.speedX = 0;
-	gamePiece.speedY = 0;
-	clearInterval(this.interval);
-	clearInterval(this.runInterval);
-}
+   clearMove = function() {
+	  gamePiece.speedX = 0;
+	  gamePiece.speedY = 0;
+	  clearInterval(this.interval);
+	  clearInterval(this.runInterval);
+  }
 }
 
 function endControl() {
@@ -52,40 +58,35 @@ function endControl() {
    };
 }
 
-navigation = function() {
-	select = function() {
-		console.clear();
-		startGame();
-		startControl();
-		document.getElementById("center").onclick = " ";
-	};
-}
-	
-
-function index() {
-	navigation();
-	canVas = gameField.canvas;
-	document.getElementById("canvas").appendChild(canVas, document.body.childNodes[0]);
-}
-
 var gameField = {
 	canvas :
 	document.createElement("canvas"),
+	
+	loadIndex : function() {
+	 navigation();
+	this.canvas.width = 480;
+	this.canvas.height = 270;
+	this.context =
+	this.canvas.getContext("2d");
+	this.frameNo = 0;
+	updateIndex();
+	document.getElementById("canvas"). appendChild(this.canvas, document.body.childNodes[0]);
+     },
+	
 	start : function() {
-		this.canvas.width = 480;
-		this.canvas.height = 270;
-		this.context =
-		this.canvas.getContext("2d");
+		this.stop();
 		this.runNo = 0;
 		this.runInterval =
 		  setInterval(run, 2500);
-		this.frameNo = 0;
         this.interval =
 		  setInterval(updateField, 20);
+		startControl();
 	},
+	
 	clear : function() {
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	},
+	
 	stop : function() {
 			clearInterval(this.interval);
 	},
@@ -96,13 +97,18 @@ var gameField = {
 	
 	lose : function() {
 		 gamePiece.speedX = -1;
-		gamePiece.speedY = 0;
+		 gamePiece.speedY = 0;
 	}
 	
 }
 
 function component(width, height, color, x, y, type) {
 	this.type = type;
+	this.color = color;
+	if (type == "image" || type == "loading") {
+        this.image = new Image();
+        this.image.src = this.color;
+    }
 	this.width = width;
 	this.height = height;
 	this.speedX = 0;
@@ -111,15 +117,35 @@ function component(width, height, color, x, y, type) {
 	this.y = y;
 	this.update = function() {
 		ctx = gameField.context;
-		if (this.type == "text") {
+		if(this.type == "image" || type == "loading") {
+			ctx.drawImage(this.image,
+             this.x,
+             this.y,
+             this.width, this.height);
+          } else if (this.type == "text") {
 			ctx.font = this.width + " " + this.height;
-			ctx.fillStyle = color;
+			ctx.fillStyle = this.color;
 			ctx.fillText(this.text, this.x, this.y);
-		} else {
-			ctx.fillStyle = color;
+		  } else {
+			ctx.fillStyle = this.color;
 			ctx.fillRect(this.x, this.y, this.width, this.height);
-		}
+	  }
 	}
+	
+	this.choose = function() {
+		this.width = "50px";
+		this.color = "black";
+	}
+	
+	this.unChoose = function() {
+		this.width = "35px";
+		this.color = "white";
+	}
+	
+	this.done = function() {
+			this .image.src = " ";
+	}
+	
 	this.newPos = function() {
 		this.x += this.speedX;
 		this.y += this.speedY;
@@ -150,19 +176,76 @@ function component(width, height, color, x, y, type) {
 		gameField.stopRun();
 		clearMove();
 		endControl();
-		document.getElementById("center"). addEventListener("click", function() {
+		function restart() {
+           document.getElementById("center").addEventListener("click", function() {
 			document.location.reload();
 			});
+        }
+        setTimeout(restart, 500);
 		}
 		return crash;
 	}
+}
+
+navigation = function() {
+   
+}
+
+
+function chooseUp() {
+		if(play.width == "35px") {
+			gameField.clear();
+		    play.choose();
+	        exit.unChoose();
+	        play.update();
+	        exit.update();
+	     } else {
+		 chooseDown();
+	     };
+}
+	
+function chooseDown() {
+		if(exit.width == "35px") {
+			gameField.clear();
+		    exit.choose();
+		    play.unChoose();
+		    play.update();
+	        exit.update();
+	   } else {
+		chooseUp();
+	   };
+}
+
+function select() {
+   	if(play.width == "50px") {
+   	console.clear();
+		gameField.canvas.style.backgroundImage = "url('back1.jpg')";
+		gameField.start();
+		setTimeout(doneLoading, 500);
+		document.getElementById("center").onclick = " ";
+      } else {
+      	alert("Are you sure you want to stop fun?");
+      }
+}
+
+function updateIndex() {
+	play.text = "Play Game";
+	exit.text = "Exit";
+	play.choose();
+	play.update();
+	exit.update();
+		
+}
+
+function doneLoading() {
+	loading.done();
 }
 
 function run() {
 	gameField.runNo += 1;
 }
 
-function updateField( ) {
+function updateField() {
 	var x, height, gap, minHeight, maxHeight, minGap, maxGap;
 	for (i = 0; i <
 		gameObstacle.length; i += 1) {
@@ -185,6 +268,9 @@ function updateField( ) {
 		gameObstacle.push(new component(10, height, "green", x, 0));
 		gameObstacle.push(new component(10, x - height - gap, "green", x, height + gap));
 	}
+	
+	
+
 	for (i = 0; i < gameObstacle.length; i += 1) {
 		gameObstacle[i].speedX = -1;
 		gameObstacle[i].newPos();
@@ -194,6 +280,8 @@ function updateField( ) {
 	gameScore.update();
 	gamePiece.newPos();
 	gamePiece.update();
+	loading.newPos();
+    loading.update();
 }
 
 function everyinterval(n) {
