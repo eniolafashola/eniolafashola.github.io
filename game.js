@@ -5,14 +5,18 @@ var gameOver;
 var loading;
 var play;
 var exit;
+var newPoints;
+var points;
+
 
 startGame = function() {
 	gamePiece = new component(30, 25, "red", 10, 120);
 	gameScore = new component("30px", "Consolas", "black", 280, 40, "text");
-	loading = new component(500, 270, "back3.jpg", 0, 0, "loading");
+	loading = new component(500, 270, "back1.jpg", 0, 0, "image");
    gameOver = new component("50px", "Consolas", "red", 115, 120, "text");
-  play = new component("35px", "Cursive", "white", 133, 112, "text");
-  exit = new component("35px", "Cursive", "white", 175, 160, "text");
+   points = new component("30px", "Consolas", "white", 70, 32.5, "text");
+   play = new component("35px", "Cursive", "white", 133, 112, "text");
+   exit = new component("35px", "Cursive", "white", 175, 160, "text");
    gameField.loadIndex();
 }
 
@@ -38,6 +42,8 @@ startControl = function() {
 	       setInterval(run, 50);
 	  this.interval =
 		   setInterval(updateField, 0);
+		
+		
    };
 
    clearMove = function() {
@@ -63,7 +69,6 @@ var gameField = {
 	document.createElement("canvas"),
 	
 	loadIndex : function() {
-	 navigation();
 	this.canvas.width = 480;
 	this.canvas.height = 270;
 	this.context =
@@ -74,7 +79,7 @@ var gameField = {
      },
 	
 	start : function() {
-		this.stop();
+		
 		this.runNo = 0;
 		this.runInterval =
 		  setInterval(run, 2500);
@@ -82,6 +87,8 @@ var gameField = {
 		  setInterval(updateField, 20);
 		startControl();
 	},
+	
+	
 	
 	clear : function() {
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -105,7 +112,7 @@ var gameField = {
 function component(width, height, color, x, y, type) {
 	this.type = type;
 	this.color = color;
-	if (type == "image" || type == "loading") {
+	if (type == "image") {
         this.image = new Image();
         this.image.src = this.color;
     }
@@ -117,7 +124,7 @@ function component(width, height, color, x, y, type) {
 	this.y = y;
 	this.update = function() {
 		ctx = gameField.context;
-		if(this.type == "image" || type == "loading") {
+		if(this.type == "image") {
 			ctx.drawImage(this.image,
              this.x,
              this.y,
@@ -173,6 +180,7 @@ function component(width, height, color, x, y, type) {
 			crash = false;
 		}
 		else if (crash = !false) {
+		updatePoints();
 		gameField.stopRun();
 		clearMove();
 		endControl();
@@ -187,14 +195,10 @@ function component(width, height, color, x, y, type) {
 	}
 }
 
-navigation = function() {
-   
-}
-
-
 function chooseUp() {
 		if(play.width == "35px") {
 			gameField.clear();
+			points.update();
 		    play.choose();
 	        exit.unChoose();
 	        play.update();
@@ -207,6 +211,7 @@ function chooseUp() {
 function chooseDown() {
 		if(exit.width == "35px") {
 			gameField.clear();
+			points.update();
 		    exit.choose();
 		    play.unChoose();
 		    play.update();
@@ -219,22 +224,35 @@ function chooseDown() {
 function select() {
    	if(play.width == "50px") {
    	console.clear();
-		gameField.canvas.style.backgroundImage = "url('back1.jpg')";
+   
+		gameField.canvas.style.backgroundImage = "url('back1.jpg'), url(' '), url('back1.jpg')";
 		gameField.start();
 		setTimeout(doneLoading, 500);
-		document.getElementById("center").onclick = " ";
+		endClick();
       } else {
       	alert("Are you sure you want to stop fun?");
       }
 }
 
+function endClick() {
+	var button = document.getElementsByClassName("button");
+ for(var i = 0; i < button.length; i++) {
+    button[i].onclick = " ";
+   };
+}
+
 function updateIndex() {
+	if (localStorage.points == undefined) {
+		points.text = "0";
+	} else {
+	points.text = localStorage.points; 
+	};
+	points.update();
 	play.text = "Play Game";
 	exit.text = "Exit";
 	play.choose();
 	play.update();
 	exit.update();
-		
 }
 
 function doneLoading() {
@@ -243,6 +261,21 @@ function doneLoading() {
 
 function run() {
 	gameField.runNo += 1;
+	
+	if(typeof(Storage)!=="undefined"){
+	   if(localStorage.points) {
+         var oldPoints =  JSON.parse(localStorage.getItem("points") );
+         newPoints = oldPoints + gameField.runNo;
+       } else {
+          localStorage.setItem("points", JSON.stringify(gameField.runNo) );
+       }
+    } else {
+        alert("localStorage not available, change browser to make game accessible game offline");
+  }
+}
+
+function updatePoints() {
+	 localStorage.setItem("points", JSON.stringify(newPoints) );
 }
 
 function updateField() {
@@ -255,6 +288,7 @@ function updateField() {
 	}
 	gameField.clear();
 	gameField.frameNo += 1;
+	
 	if (gameField.frameNo == 1 || everyinterval(150)) {
 		x = gameField.canvas.width;
 		minHeight = 20;
@@ -268,15 +302,15 @@ function updateField() {
 		gameObstacle.push(new component(10, height, "green", x, 0));
 		gameObstacle.push(new component(10, x - height - gap, "green", x, height + gap));
 	}
-	
-	
 
 	for (i = 0; i < gameObstacle.length; i += 1) {
 		gameObstacle[i].speedX = -1;
 		gameObstacle[i].newPos();
 		gameObstacle[i].update();
 	}
+	
 	gameScore.text = "SCORE: " +  gameField.runNo;
+	
 	gameScore.update();
 	gamePiece.newPos();
 	gamePiece.update();
