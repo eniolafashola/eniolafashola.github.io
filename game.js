@@ -227,10 +227,17 @@ function select() {
 		gameField.canvas.style.backgroundImage = "url('back1.jpg'), url(' '), url('back1.jpg')";
 		gameField.start();
 		setTimeout(doneLoading, 500);
-		document.getElementById("center").onclick = " ";
+		endClick();
       } else {
       	alert("Are you sure you want to stop fun?");
       }
+}
+
+function endClick() {
+	var button = document.getElementsByClassName("button");
+ for(var i = 0; i < button.length; i++) {
+    button[i].onclick = " ";
+   };
 }
 
 function updateIndex() {
