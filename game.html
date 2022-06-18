@@ -7,21 +7,23 @@
 	<link rel="stylesheet" type="text/css" href="game.css">
 </head>
 <body id="body"  onmousedown="return false" onselectstart="return false" onload="startGame()">
-	<div id="screen">
-		<div id="canvas"></div>
-	</div>
-	<div id="title">
-		<h2>1965</h2>
-	</div>
-	<div id="interact">
-		<div id="cntl">
-			<div class="up button" onclick="chooseUp()" onmousedown="moveUp()" onmouseup="clearMove()" ontouchstart="moveUp()" ontouchend="clearMove()">^</div><br>
-			<div class="left button" onclick="chooseUp()" onmousedown="moveLeft()" onmouseup="clearMove()" ontouchstart="moveLeft()" ontouchend="clearMove()"><</div>
-			<div id="center" class="center button" onclick="select()" onmousedown="speedUp()" onmouseup="clearMove()" ontouchstart="speedUp()" ontouchend="clearMove()"></div>
-			<div class="right button" onclick="chooseDown()" onmousedown="moveRight()" onmouseup="clearMove()" ontouchstart="moveRight()" ontouchend="clearMove()">></div><br>
-			<div id="down" class="down button" onclick="chooseDown()" onmousedown="moveDown()" onmouseup="clearMove()" ontouchstart="moveDown()" ontouchend="clearMove()" >~</div>				
-		</div>
-	</div>
+	<section id="game">
+		<span id="screen">
+			<div id="canvas"></div>
+        </span>
+        <span id="title">
+        	<h2>1965</h2>
+        </span>
+        <span id="interact">
+        	<div id="cntl">
+			  <div class="up button" onclick="chooseUp()" onmousedown="moveUp()" onmouseup="clearMove()" ontouchstart="moveUp()" ontouchend="clearMove()">^</div><br>
+			  <div class="left button" onclick="chooseUp()" onmousedown="moveLeft()" onmouseup="clearMove()" ontouchstart="moveLeft()" ontouchend="clearMove()"><</div>
+			  <div id="center" class="center button" onclick="select()" onmousedown="speedUp()" onmouseup="clearMove()" ontouchstart="speedUp()" ontouchend="clearMove()"></div>
+			  <div class="right button" onclick="chooseDown()" onmousedown="moveRight()" onmouseup="clearMove()" ontouchstart="moveRight()" ontouchend="clearMove()">></div><br>
+			  <div id="down" class="down button" onclick="chooseDown()" onmousedown="moveDown()" onmouseup="clearMove()" ontouchstart="moveDown()" ontouchend="clearMove()" >~</div>				
+		  </div>
+        </span>
+	</section>
  <script src="game.js"></script>
 </body>
 </html>

@@ -1,19 +1,18 @@
 var gamePiece;
+var gamePieceA;
+var gamePieceB;
 var gameObstacle = [];
 var gameScore;
-var gameOver;
 var loading;
 var play;
 var exit;
 var newPoints;
 var points;
 
-
 startGame = function() {
-	gamePiece = new component(30, 25, "red", 10, 120);
+	gamePiece = new component(90, 30, "airship.png", 10, 120, "image");
 	gameScore = new component("30px", "Consolas", "black", 280, 40, "text");
 	loading = new component(500, 270, "back1.jpg", 0, 0, "image");
-   gameOver = new component("50px", "Consolas", "red", 115, 120, "text");
    points = new component("30px", "Consolas", "white", 70, 32.5, "text");
    play = new component("35px", "Cursive", "white", 133, 112, "text");
    exit = new component("35px", "Cursive", "white", 175, 160, "text");
@@ -39,11 +38,9 @@ startControl = function() {
 
    speedUp = function() {
   	this.runInterval =
-	       setInterval(run, 50);
+	       setInterval(run, 100);
 	  this.interval =
 		   setInterval(updateField, 0);
-		
-		
    };
 
    clearMove = function() {
@@ -77,9 +74,14 @@ var gameField = {
 	updateIndex();
 	document.getElementById("canvas"). appendChild(this.canvas, document.body.childNodes[0]);
      },
+     
+    chooseAvatar : function() {
+     	updateAvatar();
+    },
 	
 	start : function() {
-		
+		endClick();
+		startControl();
 		this.runNo = 0;
 		this.runInterval =
 		  setInterval(run, 2500);
@@ -88,6 +90,19 @@ var gameField = {
 		startControl();
 	},
 	
+	finish: function() {
+		this.stop();
+		updatePoints();
+		gameField.stopRun();
+		clearMove();
+		endControl();
+		function restart() {
+           document.getElementById("center").addEventListener("click", function() {
+			document.location.reload();
+			});
+        }
+        setTimeout(restart, 1000);
+      },
 	
 	
 	clear : function() {
@@ -100,13 +115,7 @@ var gameField = {
 	
 	stopRun: function () {
 		  clearInterval(this.runInterval);
-	},
-	
-	lose : function() {
-		 gamePiece.speedX = -1;
-		 gamePiece.speedY = 0;
 	}
-	
 }
 
 function component(width, height, color, x, y, type) {
@@ -139,6 +148,12 @@ function component(width, height, color, x, y, type) {
 	  }
 	}
 	
+	this.explode = function() {
+		this.image.src = "explode.png";
+		this.width = 150;
+		this.height = 100;
+	}
+	
 	this.choose = function() {
 		this.width = "50px";
 		this.color = "black";
@@ -150,7 +165,7 @@ function component(width, height, color, x, y, type) {
 	}
 	
 	this.done = function() {
-			this .image.src = " ";
+			this.image.src = " ";
 	}
 	
 	this.newPos = function() {
@@ -164,8 +179,8 @@ function component(width, height, color, x, y, type) {
 	this.crashWith =
 	function(otherobj) {
 		var myLeft = this.x;
-		var myRight = this.x + (this.width);
-		var myTop = this.y;
+		var myRight = this.x + (this.width) -2;
+		var myTop = this.y + 5;
 		var myBottom = this.y + (this.height);
 		var otherLeft = otherobj.x;
 		var otherRight = otherobj.x + (otherobj.width);
@@ -178,18 +193,6 @@ function component(width, height, color, x, y, type) {
 		 (myRight < otherLeft) ||
 	     (myLeft > otherRight)) {
 			crash = false;
-		}
-		else if (crash = !false) {
-		updatePoints();
-		gameField.stopRun();
-		clearMove();
-		endControl();
-		function restart() {
-           document.getElementById("center").addEventListener("click", function() {
-			document.location.reload();
-			});
-        }
-        setTimeout(restart, 500);
 		}
 		return crash;
 	}
@@ -224,12 +227,11 @@ function chooseDown() {
 function select() {
    	if(play.width == "50px") {
    	console.clear();
-		gameField.canvas.style.backgroundImage = "url('back1.jpg'), url(' '), url('back1.jpg')";
-		gameField.start();
+        gameField.canvas.style.backgroundImage = "url(' '), url('back1.jpg'), url(' '), url('back1.jpg')";
+	    gameField.start();
 		setTimeout(doneLoading, 500);
-		endClick();
       } else {
-      	alert("Are you sure you want to stop fun?");
+      	alert("Please Stay 🥺");
       }
 }
 
@@ -252,6 +254,23 @@ function updateIndex() {
 	play.choose();
 	play.update();
 	exit.update();
+}
+
+
+function updateAvatar() {
+	gamePiece.width = 100;
+	gamePiece.height = 100;
+	gamePiece.x = 190;
+	gamePiece.y = 85;
+	gamePieceA = gamePiece;
+	gamePieceB.color = "yellow";
+	gamePieceA.color = "white";
+	gamePieceA.newPos();
+	gamePieceA.update();
+}
+
+function updateFinish() {
+	gameField.canvas.style.backgroundImage = "url('gameover.png '), url('back1.jpg'), url(' '), url('back1.jpg')";
 }
 
 function doneLoading() {
@@ -282,7 +301,15 @@ function updateField() {
 	for (i = 0; i <
 		gameObstacle.length; i += 1) {
 		if (gamePiece.crashWith(gameObstacle[i])) {
-			gameField.lose();
+			function freeze() {
+				gameField.finish();
+			};
+			updateFinish();
+			navigator.vibrate(50);
+			setTimeout(freeze, 100);
+			gamePiece.y -= 3;
+			gamePiece.x += 2;
+			gamePiece.explode();
 		}
 	}
 	gameField.clear();
@@ -291,11 +318,11 @@ function updateField() {
 	if (gameField.frameNo == 1 || everyinterval(150)) {
 		x = gameField.canvas.width;
 		minHeight = 20;
-		maxHeight = 195;
+		maxHeight = 175;
 		height =
 		Math.floor(Math.random() * (maxHeight - minHeight + 1) + minHeight);
-		minGap = 55;
-		maxGap = 200;
+		minGap = 70;
+		maxGap = 275;
 		gap =
 		Math.floor(Math.random() * (maxGap - minGap + 1) + minGap);
 		gameObstacle.push(new component(10, height, "green", x, 0));
@@ -309,7 +336,6 @@ function updateField() {
 	}
 	
 	gameScore.text = "SCORE: " +  gameField.runNo;
-	
 	gameScore.update();
 	gamePiece.newPos();
 	gamePiece.update();
