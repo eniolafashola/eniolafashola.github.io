@@ -1,22 +1,50 @@
 var gamePiece;
-var gamePieceA;
-var gamePieceB;
 var gameObstacle = [];
 var gameScore;
 var loading;
-var play;
-var exit;
-var newPoints;
-var points;
+var paused;
+var optionA;
+var optionB;
+var optionC;
+var pointTotal;
+var highScore;
+var localStore;
+let up = document.getElementById("up");
+let down = document.getElementById("down");
+let left = document.getElementById("left");
+let right = document.getElementById("right");
+let center = document.getElementById("center");
+
+if(typeof(Storage)!=="undefined"){
+	 if(localStorage.points) {
+         localStore = JSON.parse(localStorage.getItem("points") );
+         
+       } else {
+        localStore = 0;
+     	
+     };
+     if(localStorage.score) {
+     	highScore = JSON.parse(localStorage.getItem("score") );
+     } else {
+     	highScore = 0;
+     };
+   }else {
+        alert("localStorage not available, change browser to make game accessible game offline");
+ };
+ 
+
 
 startGame = function() {
-	gamePiece = new component(90, 30, "airship.png", 10, 120, "image");
-	gameScore = new component("30px", "Consolas", "black", 280, 40, "text");
+	gamePiece = new component(95, 30, "airship.png", 10, 120, "image");
+	gameScore = new component("20px", "Consolas", "black", 210, 100, "text");
 	loading = new component(500, 270, "back1.jpg", 0, 0, "image");
-   points = new component("30px", "Consolas", "white", 70, 32.5, "text");
-   play = new component("35px", "Cursive", "white", 133, 112, "text");
-   exit = new component("35px", "Cursive", "white", 175, 160, "text");
-   gameField.loadIndex();
+    points = new component("20px", "Consolas", "white", 70, 28, "text");
+    score = new component("20px", "Consolas", "white", 270, 28, "text");
+    paused = new component(105, 70, "play.png", 180, 90, "image");
+    optionA = new component("35px", "Cursive", "white", 133, 152, "text");
+    optionB = new component("35px", "Cursive", "white", 173, 200, "text");
+    optionC = new component("35px", "Cursive", "white", 193, 248, "text");
+    gameField.loadIndex();
 }
 
 startControl = function() {
@@ -46,20 +74,38 @@ startControl = function() {
    clearMove = function() {
 	  gamePiece.speedX = 0;
 	  gamePiece.speedY = 0;
+	  
 	  clearInterval(this.interval);
 	  clearInterval(this.runInterval);
-  }
-}
-
-function endControl() {
-	var button = document.getElementsByClassName("button");
- for(var i = 0; i < button.length; i++) {
-    button[i].onmousedown = " ";
-	button[i].onmouseup = " ";
-	button[i].ontouchstart = " ";
-	button[i].ontouchend = " ";
+  };
+  
+  pause = function() {
+  	gameField.stop();
+      gameField.stopRun();
+      endControl();
+      paused.newPos();
+      paused.update();
+       center.onclick = resume;
+  };
+  
+   resume = function() {
+  	gameField.runInterval =
+		  setInterval(run, 2500);
+       gameField.interval =
+		  setInterval(updateField, 20);
+	   startControl();
+	   center.onclick = " ";
    };
 }
+
+endControl = function() {
+  	var clear = clearMove();
+  	moveUp = clear;
+      moveDown = clear;
+      moveLeft = clear;
+      moveRight = clear;
+      speedUp = clear;
+};
 
 var gameField = {
 	canvas :
@@ -72,41 +118,63 @@ var gameField = {
 	this.canvas.getContext("2d");
 	this.frameNo = 0;
 	updateIndex();
-	document.getElementById("canvas"). appendChild(this.canvas, document.body.childNodes[0]);
+	startClick();
+	document.getElementById("canvas"). appendChild(this.canvas);
      },
-     
-    chooseAvatar : function() {
-     	updateAvatar();
-    },
+
 	
 	start : function() {
 		endClick();
 		startControl();
+		center.ondblclick = pause;
 		this.runNo = 0;
 		this.runInterval =
 		  setInterval(run, 2500);
         this.interval =
 		  setInterval(updateField, 20);
-		startControl();
 	},
 	
 	finish: function() {
-		this.stop();
+		gameField.canvas.style.backgroundImage =
+ "url(' '), url('gameover.png '), url('Gem Orange.png'), url('Gem Green.png '), url(' ')";
+       navigator.vibrate(50);
+       gamePiece.y -= 7;
+	   gamePiece.x -= 3;
+	   gamePiece.explode();
 		updatePoints();
-		gameField.stopRun();
+		this.stopRun();
 		clearMove();
 		endControl();
-		function restart() {
-           document.getElementById("center").addEventListener("click", function() {
-			document.location.reload();
-			});
-        }
-        setTimeout(restart, 1000);
+		center.ondblclick = " ";
+	   setTimeout(updateFinish, 80);
       },
+      
+    toggleFullScreen : function() {
+        var game = document.getElementById("game");
+        if (!document.fullscreenElement){
+           game.requestFullscreen();
+          } else {
+           document.exitFullscreen();
+         };
+    },
 	
+	reset : function() {
+		gamePiece.x = 10;
+		gamePiece.y = 120;
+		gamePiece.image.src = "airship.png";
+		gamePiece.width = 95;
+		gamePiece.height = 30;
+		gameObstacle= [ ];
+		localStore = JSON.parse(localStorage.getItem("points") );
+		highScore = JSON.parse(localStorage.getItem("score") );
+	},
 	
 	clear : function() {
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+	},
+	
+	clearOption : function() {
+		this.context.clearRect(130, 115, 195, 137);
 	},
 	
 	stop : function() {
@@ -150,7 +218,7 @@ function component(width, height, color, x, y, type) {
 	
 	this.explode = function() {
 		this.image.src = "explode.png";
-		this.width = 150;
+		this.width = 190;
 		this.height = 100;
 	}
 	
@@ -198,79 +266,143 @@ function component(width, height, color, x, y, type) {
 	}
 }
 
-function chooseUp() {
-		if(play.width == "35px") {
+function hoverUp() {
+		if(optionA.width == "50px") {
 			gameField.clear();
-			points.update();
-		    play.choose();
-	        exit.unChoose();
-	        play.update();
-	        exit.update();
+			points.update(); score.update();
+		    optionC.choose();
+		    optionA.unChoose();
+		    optionA.update();
+		    optionB.update();
+	        optionC.update();
+	     } else if(optionC.width == "50px") {
+		    gameField.clear();
+			points.update(); score.update();
+		    optionB.choose();
+	        optionC.unChoose();
+	        optionA.update();
+	        optionB.update();
+	        optionC.update();
 	     } else {
-		 chooseDown();
+		    gameField.clear();
+			points.update(); score.update();
+		    optionA.choose();
+	        optionB.unChoose();
+	        optionA.update();
+	        optionB.update();
+	        optionC.update();
 	     };
 }
-	
-function chooseDown() {
-		if(exit.width == "35px") {
+
+function hoverDown() {
+		if(optionA.width == "50px") {
 			gameField.clear();
-			points.update();
-		    exit.choose();
-		    play.unChoose();
-		    play.update();
-	        exit.update();
-	   } else {
-		chooseUp();
-	   };
+			points.update(); score.update();
+		    optionB.choose();
+		    optionA.unChoose();
+		    optionA.update();
+		    optionB.update();
+	        optionC.update();
+	     } else if(optionB.width == "50px") {
+		    gameField.clear();
+			points.update(); score.update();
+		    optionC.choose();
+	        optionB.unChoose();
+	        optionA.update();
+	        optionB.update();
+	        optionC.update();
+	     } else {
+		    gameField.clear();
+			points.update(); score.update();
+		    optionA.choose();
+	        optionC.unChoose();
+	        optionA.update();
+	        optionB.update();
+	        optionC.update();
+	     };
 }
 
 function select() {
-   	if(play.width == "50px") {
-   	console.clear();
-        gameField.canvas.style.backgroundImage = "url(' '), url('back1.jpg'), url(' '), url('back1.jpg')";
+   	if(optionA.width == "50px") {
+   	if(optionA.text == "Restart") {
+   	gameField.reset();
+   	};
+        gameField.canvas.style.backgroundImage = "url(' '), url(' '), url('Gem Orange.png'), url('Gem Green.png '), url(' ')";
 	    gameField.start();
 		setTimeout(doneLoading, 500);
+      } else if(optionB.width == "50px") {
+        gameField.toggleFullScreen();
       } else {
-      	alert("Please Stay 🥺");
+      if(optionC.text == "Exit") {
+      	window.close();
+        } else {
+        	gameField.canvas.style.backgroundImage = "url(' '), url(' '), url('Gem Orange.png'), url(' Gem Green.png'), url('')";
+        	gameField.reset();
+        	gameField.loadIndex();
+            gameField.clearOption();
+            optionC.unChoose();
+            showOptions();
+        };
       }
 }
 
+function startClick() {
+	up.onclick = hoverUp;
+	down.onclick = hoverDown;
+    right.onclick = hoverDown;
+    left.onclick = hoverUp;
+    center.onclick = select;
+}
+
 function endClick() {
-	var button = document.getElementsByClassName("button");
- for(var i = 0; i < button.length; i++) {
-    button[i].onclick = " ";
-   };
+	up.onclick = " ";
+	down.onclick = " ";
+    right.onclick = " ";
+    left.onclick = " ";
+    center.onclick = " ";
 }
 
 function updateIndex() {
-	if (localStorage.points == undefined) {
-		points.text = "0";
-	} else {
-	points.text = localStorage.points; 
-	};
+	points.text = localStore; 
 	points.update();
-	play.text = "Play Game";
-	exit.text = "Exit";
-	play.choose();
-	play.update();
-	exit.update();
+	score.text = highScore;
+	score.update();
+	optionA.text = "Play Game";
+	optionC.text = "Exit";
+	optionB.text = "Toggle Screen";
+	showOptions();
 }
 
-
-function updateAvatar() {
-	gamePiece.width = 100;
-	gamePiece.height = 100;
-	gamePiece.x = 190;
-	gamePiece.y = 85;
-	gamePieceA = gamePiece;
-	gamePieceB.color = "yellow";
-	gamePieceA.color = "white";
-	gamePieceA.newPos();
-	gamePieceA.update();
+function showOptions() {
+	optionA.choose();
+	optionA.update();
+	optionB.update();
+	optionC.update();
 }
+
+function updatePoints() {
+	localStorage.setItem("points", JSON.stringify(pointTotal) );
+	if(gameField.runNo > highScore) {
+		localStorage.setItem("score", JSON.stringify(gameField.runNo) );
+	};
+}
+
 
 function updateFinish() {
-	gameField.canvas.style.backgroundImage = "url('gameover.png '), url('back1.jpg'), url(' '), url('back1.jpg')";
+	gameField.stop();
+	function oya() {
+		gameField.clear();
+		gameScore.text = "+ " + gameField.runNo;
+		gameScore.update();
+		points.update(); score.update();
+		gameField.canvas.style.backgroundImage = "url('spaceshipexplode.gif'), url(''), url('Gem Orange.png'), url(' Gem Green.png'), url('')";
+	    optionA.text = "Restart";
+	    optionB.text = "Toggle Screen";
+	    optionC.text = "Home";
+	    showOptions();
+	    setTimeout(startClick, 150); 
+	};
+	setTimeout(oya, 440);
 }
 
 function doneLoading() {
@@ -279,37 +411,16 @@ function doneLoading() {
 
 function run() {
 	gameField.runNo += 1;
-	
-	if(typeof(Storage)!=="undefined"){
-	   if(localStorage.points) {
-         var oldPoints =  JSON.parse(localStorage.getItem("points") );
-         newPoints = oldPoints + gameField.runNo;
-       } else {
-          localStorage.setItem("points", JSON.stringify(gameField.runNo) );
-       }
-    } else {
-        alert("localStorage not available, change browser to make game accessible game offline");
-  }
 }
-
-function updatePoints() {
-	 localStorage.setItem("points", JSON.stringify(newPoints) );
-}
+		
+	   
 
 function updateField() {
 	var x, height, gap, minHeight, maxHeight, minGap, maxGap;
 	for (i = 0; i <
 		gameObstacle.length; i += 1) {
 		if (gamePiece.crashWith(gameObstacle[i])) {
-			function freeze() {
-				gameField.finish();
-			};
-			updateFinish();
-			navigator.vibrate(50);
-			setTimeout(freeze, 100);
-			gamePiece.y -= 3;
-			gamePiece.x += 2;
-			gamePiece.explode();
+			gameField.finish();
 		}
 	}
 	gameField.clear();
@@ -317,16 +428,16 @@ function updateField() {
 	
 	if (gameField.frameNo == 1 || everyinterval(150)) {
 		x = gameField.canvas.width;
-		minHeight = 20;
-		maxHeight = 175;
+		minHeight = 80;
+		maxHeight = 185;
 		height =
 		Math.floor(Math.random() * (maxHeight - minHeight + 1) + minHeight);
-		minGap = 70;
+		minGap = 60;
 		maxGap = 275;
 		gap =
 		Math.floor(Math.random() * (maxGap - minGap + 1) + minGap);
-		gameObstacle.push(new component(10, height, "green", x, 0));
-		gameObstacle.push(new component(10, x - height - gap, "green", x, height + gap));
+		gameObstacle.push(new component(10, height, "yellow", x, 0));
+		gameObstacle.push(new component(10, x - height - gap, "yellow", x, height + gap));
 	}
 
 	for (i = 0; i < gameObstacle.length; i += 1) {
@@ -335,8 +446,14 @@ function updateField() {
 		gameObstacle[i].update();
 	}
 	
-	gameScore.text = "SCORE: " +  gameField.runNo;
-	gameScore.update();
+	if(gameField.runNo > highScore) {
+		score.text = gameField.runNo;
+	};
+  
+	pointTotal = localStore + gameField.runNo;
+	points.text = pointTotal;
+	points.update();
+    score.update();
 	gamePiece.newPos();
 	gamePiece.update();
 	loading.newPos();
