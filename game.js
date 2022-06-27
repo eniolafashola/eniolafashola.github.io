@@ -1,7 +1,6 @@
 var gamePiece;
 var gameObstacle = [];
 var gameScore;
-var loading;
 var paused;
 var optionA;
 var optionB;
@@ -31,13 +30,10 @@ if(typeof(Storage)!=="undefined"){
    }else {
         alert("localStorage not available, change browser to make game accessible game offline");
  };
- 
-
 
 startGame = function() {
 	gamePiece = new component(95, 30, "airship.png", 10, 120, "image");
 	gameScore = new component("20px", "Consolas", "black", 210, 100, "text");
-	loading = new component(500, 270, "back1.jpg", 0, 0, "image");
     points = new component("20px", "Consolas", "white", 70, 28, "text");
     score = new component("20px", "Consolas", "white", 270, 28, "text");
     paused = new component(105, 70, "play.png", 180, 90, "image");
@@ -48,54 +44,54 @@ startGame = function() {
 }
 
 startControl = function() {
-	moveUp = function() {
-	gamePiece.speedY = -1.2;
-      };
+    moveUp = function() {
+	  gamePiece.speedY = -1.2;
+    };
 
     moveDown = function() {
-	gamePiece.speedY = 1.2;
-     };
+	  gamePiece.speedY = 1.2;
+    };
 
     moveLeft = function() {
-	gamePiece.speedX = -1;
+	  gamePiece.speedX = -1;
     };
 
     moveRight = function() {
-	gamePiece.speedX = 1;
+	  gamePiece.speedX = 1;
     };
 
-   speedUp = function() {
-  	this.runInterval =
+    speedUp = function() {
+  	  this.runInterval =
 	       setInterval(run, 100);
 	  this.interval =
 		   setInterval(updateField, 0);
-   };
+    };
 
-   clearMove = function() {
+    clearMove = function() {
 	  gamePiece.speedX = 0;
 	  gamePiece.speedY = 0;
 	  
 	  clearInterval(this.interval);
 	  clearInterval(this.runInterval);
-  };
+    };
   
-  pause = function() {
-  	gameField.stop();
+    pause = function() {
+   	  gameField.stop();
       gameField.stopRun();
       endControl();
       paused.newPos();
       paused.update();
        center.onclick = resume;
-  };
+    };
   
-   resume = function() {
-  	gameField.runInterval =
+    resume = function() {
+  	  gameField.runInterval =
 		  setInterval(run, 2500);
-       gameField.interval =
+      gameField.interval =
 		  setInterval(updateField, 20);
 	   startControl();
 	   center.onclick = " ";
-   };
+    };
 }
 
 endControl = function() {
@@ -112,18 +108,19 @@ var gameField = {
 	document.createElement("canvas"),
 	
 	loadIndex : function() {
-	this.canvas.width = 480;
-	this.canvas.height = 270;
-	this.context =
-	this.canvas.getContext("2d");
-	this.frameNo = 0;
-	updateIndex();
-	startClick();
-	document.getElementById("canvas"). appendChild(this.canvas);
+	  this.canvas.width = 480;
+	  this.canvas.height = 270;
+	  this.context =
+	  this.canvas.getContext("2d");
+	  this.frameNo = 0;
+	  updateIndex();
+	  startClick();
+	  document.getElementById("canvas"). appendChild(this.canvas);
      },
 
 	
 	start : function() {
+		console.clear();
 		endClick();
 		startControl();
 		center.ondblclick = pause;
@@ -232,18 +229,11 @@ function component(width, height, color, x, y, type) {
 		this.color = "white";
 	}
 	
-	this.done = function() {
-			this.image.src = " ";
-	}
-	
 	this.newPos = function() {
 		this.x += this.speedX;
 		this.y += this.speedY;
 	}
-	this.crashPos = function () {
-		this.x -= this.speedX;
-	}
-	
+
 	this.crashWith =
 	function(otherobj) {
 		var myLeft = this.x;
@@ -269,7 +259,8 @@ function component(width, height, color, x, y, type) {
 function hoverUp() {
 		if(optionA.width == "50px") {
 			gameField.clear();
-			points.update(); score.update();
+			points.update();
+			score.update();
 		    optionC.choose();
 		    optionA.unChoose();
 		    optionA.update();
@@ -277,7 +268,8 @@ function hoverUp() {
 	        optionC.update();
 	     } else if(optionC.width == "50px") {
 		    gameField.clear();
-			points.update(); score.update();
+			points.update();
+			score.update();
 		    optionB.choose();
 	        optionC.unChoose();
 	        optionA.update();
@@ -285,7 +277,8 @@ function hoverUp() {
 	        optionC.update();
 	     } else {
 		    gameField.clear();
-			points.update(); score.update();
+			points.update();
+			score.update();
 		    optionA.choose();
 	        optionB.unChoose();
 	        optionA.update();
@@ -329,7 +322,6 @@ function select() {
    	};
         gameField.canvas.style.backgroundImage = "url(' '), url(' '), url('Gem Orange.png'), url('Gem Green.png '), url(' ')";
 	    gameField.start();
-		setTimeout(doneLoading, 500);
       } else if(optionB.width == "50px") {
         gameField.toggleFullScreen();
       } else {
@@ -405,10 +397,6 @@ function updateFinish() {
 	setTimeout(oya, 440);
 }
 
-function doneLoading() {
-	loading.done();
-}
-
 function run() {
 	gameField.runNo += 1;
 }
@@ -456,8 +444,6 @@ function updateField() {
     score.update();
 	gamePiece.newPos();
 	gamePiece.update();
-	loading.newPos();
-    loading.update();
 }
 
 function everyinterval(n) {
